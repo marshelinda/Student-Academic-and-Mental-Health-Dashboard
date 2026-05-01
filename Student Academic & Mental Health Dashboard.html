@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Academic & Mental Health Dashboard</title>
+    <!-- Scripts -->
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f0f7ff; color: #334155; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .card { background: white; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0, 162, 255, 0.05); padding: 1.5rem; border: 1px solid #e0f2fe; }
+        
+        /* Navigation Centered */
+        .nav-btn { padding: 1rem 2.5rem; font-weight: 600; color: #64748b; border-bottom: 4px solid transparent; transition: 0.3s; }
+        .nav-btn:hover { color: #3b82f6; }
+        .nav-btn.active { color: #0ea5e9; border-bottom-color: #0ea5e9; background-color: #f0f9ff; border-radius: 8px 8px 0 0; }
+        
+        /* Standardized KPI Design */
+        .kpi-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; padding: 1.5rem; background: #ffffff; border-radius: 20px; border: 1px solid #bae6fd; margin-bottom: 1.5rem; }
+        .kpi-box { text-align: center; }
+        .kpi-label { font-size: 0.8rem; color: #64748b; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 0.05em; }
+        .kpi-value { font-size: 2.5rem; font-weight: 800; color: #0c4a6e; }
+
+        /* Table Styles */
+        .dashboard-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .dashboard-table th { background: #e0f2fe; color: #0369a1; padding: 14px; text-align: left; font-weight: 600; border-bottom: 2px solid #bae6fd; }
+        .dashboard-table td { background: #ffffff; padding: 14px; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #475569; }
+
+        .py-table-t3 { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
+        .py-table-t3 th { background: #7dd3fc; color: #ffffff; padding: 12px; text-align: center; font-size: 14px; text-transform: uppercase; }
+        .py-table-t3 td { padding: 12px; text-align: center; border-bottom: 1px solid #e0f2fe; font-size: 13px; color: #334155; }
+    </style>
+</head>
+<body>
+
+    <!-- Header Sky Blue Centered -->
+    <header class="bg-gradient-to-r from-sky-50 to-blue-100 border-b border-sky-200 px-8 py-12 shadow-sm text-center">
+        <h1 class="text-3xl font-extrabold uppercase tracking-widest text-sky-800">Student Academic & Mental Health Dashboard</h1>
+        <p class="text-sky-600 mt-2 font-medium">Holistic Integration of Learning Performance and Well-being Data</p>
+    </header>
+
+    <!-- Navigation Centered -->
+    <nav class="bg-white shadow-md sticky top-0 z-50 px-8 border-b border-sky-100">
+        <div class="max-w-7xl mx-auto flex justify-center gap-4">
+            <button onclick="switchTab('tab1')" id="btn-tab1" class="nav-btn active">Student Profile</button>
+            <button onclick="switchTab('tab2')" id="btn-tab2" class="nav-btn">Academic Pressure</button>
+            <button onclick="switchTab('tab3')" id="btn-tab3" class="nav-btn">Mental Health</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Centered Container -->
+    <main class="max-w-[1400px] mx-auto p-8 space-y-12">
+        
+        <!-- ================= TAB 1: PROFILE ================= -->
+        <div id="tab1" class="tab-content active space-y-8">
+            <div class="text-center space-y-2">
+                <h2 class="text-2xl font-bold text-sky-900">Student Profile & Academic Overview</h2>
+                <p class="text-sky-500">Demographic distribution and academic performance metrics</p>
+            </div>
+            
+            <div class="kpi-container shadow-sm">
+                <div class="kpi-box"><div class="kpi-label">Total Dataset</div><div class="kpi-value">15k</div></div>
+                <div class="kpi-box border-x border-sky-100"><div class="kpi-label">Average Performance</div><div class="kpi-value" style="color: #60a5fa;">71.09</div></div>
+                <div class="kpi-box"><div class="kpi-label">High Performers</div><div class="kpi-value" style="color: #fbbf24;">5.7%</div></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card"><div id="tab1-gender" class="h-80"></div></div>
+                <div class="card"><div id="tab1-age" class="h-80"></div></div>
+            </div>
+
+            <div class="card"><div id="tab1-box" class="h-[450px]"></div></div>
+            
+            <div class="card overflow-hidden">
+                <table class="dashboard-table">
+                    <thead><tr><th>Performance Category</th><th>Avg Precision Score</th></tr></thead>
+                    <tbody>
+                        <tr><td>Low Performance (<60)</td><td>58.4377</td></tr>
+                        <tr><td>Average Performance (60-80)</td><td>70.7127</td></tr>
+                        <tr><td>High Performance (>80)</td><td>82.1651</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card"><div id="tab1-scatter" class="h-[550px]"></div></div>
+        </div>
+
+        <!-- ================= TAB 2: ACADEMIC PRESSURE (LAYOUT 2x3) ================= -->
+        <div id="tab2" class="tab-content space-y-8">
+            <div class="relative py-4 text-center">
+                <div class="absolute left-0 top-0 text-left">
+                    <label class="text-[10px] font-bold text-sky-400 uppercase block mb-1">Filter View:</label>
+                    <select id="sleepFilter" onchange="renderTab2()" class="border-2 border-sky-100 p-2 rounded-lg bg-sky-50 text-xs font-bold text-sky-700 focus:outline-none focus:border-sky-400 shadow-sm transition-all">
+                        <option value="All">All Categories</option>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                        <option value="Extreme">Extreme</option>
+                    </select>
+                </div>
+                <h2 class="text-2xl font-bold text-sky-900">Academic Pressure & Lifestyle</h2>
+                <p class="text-sky-500">Tracking the impact of study load and screen time on student recovery</p>
+            </div>
+
+            <div class="kpi-container shadow-sm">
+                <div class="kpi-box"><div class="kpi-label">Sleep-Screen Index</div><div id="kpi2-1" class="kpi-value" style="color: #38bdf8;">--</div></div>
+                <div class="kpi-box border-x border-sky-100"><div class="kpi-label">Average Sleep</div><div id="kpi2-2" class="kpi-value" style="color: #4ade80;">--</div></div>
+                <div class="kpi-box"><div class="kpi-label">Sleep Resilience</div><div id="kpi2-3" class="kpi-value" style="color: #fb923c;">--</div></div>
+            </div>
+
+            <!-- Changed from md:grid-cols-3 to md:grid-cols-2 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card"><div id="t2-c1" class="h-80"></div></div>
+                <div class="card"><div id="t2-c2" class="h-80"></div></div>
+                <div class="card"><div id="t2-c3" class="h-80"></div></div>
+                <div class="card"><div id="t2-c4" class="h-80"></div></div>
+                <div class="card"><div id="t2-c5" class="h-80"></div></div>
+                <div class="card"><div id="t2-c6" class="h-80"></div></div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 3: MENTAL HEALTH ================= -->
+        <div id="tab3" class="tab-content space-y-10">
+            <div class="text-center space-y-2">
+                <h2 class="text-2xl font-bold text-sky-900">Mental Health & Burnout Insight</h2>
+                <p class="text-sky-500">Mapping burnout risks and the role of social support systems</p>
+            </div>
+
+            <div class="kpi-container shadow-sm border-sky-300">
+                <div class="kpi-box"><div class="kpi-label">Avg Burnout Score</div><div class="kpi-value" style="color: #94a3b8;">1.79</div></div>
+                <div class="kpi-box border-x border-sky-200"><div class="kpi-label">Mental Health Index</div><div class="kpi-value" style="color: #0ea5e9;">7.04</div></div>
+                <div class="kpi-box"><div class="kpi-label">High Risk Level</div><div class="kpi-value" style="color: #f87171;">1.5%</div></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+                <div class="card md:col-span-5 h-[450px]" id="t3-donut"></div>
+                <div class="card md:col-span-7 h-[450px]" id="t3-scatter-burnout"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card h-[450px]" id="t3-box-social"></div>
+                <div class="card h-[450px]" id="t3-box-dropout"></div>
+            </div>
+
+            <div class="card overflow-hidden">
+                <h4 class="text-center font-bold text-sky-800 mb-6 uppercase tracking-wider">Raw Student Data Snippet</h4>
+                <div class="overflow-x-auto">
+                    <table class="py-table-t3 shadow-sm">
+                        <thead>
+                            <tr>
+                                <th>Gender</th>
+                                <th>Academic Year</th>
+                                <th>Stress Score</th>
+                                <th>Burnout Score</th>
+                                <th>Mental Health Index</th>
+                                <th>Risk Level</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Male</td><td>2</td><td>4.1169</td><td>2.0373</td><td>7.0744</td><td>Low</td></tr>
+                            <tr><td>Female</td><td>3</td><td>0.3494</td><td>0.0000</td><td>9.8602</td><td>Low</td></tr>
+                            <tr><td>Male</td><td>2</td><td>3.4761</td><td>0.0000</td><td>7.6263</td><td>Low</td></tr>
+                            <tr><td>Female</td><td>1</td><td>6.2104</td><td>4.1200</td><td>5.1201</td><td>Medium</td></tr>
+                            <tr><td>Other</td><td>4</td><td>8.5512</td><td>7.2103</td><td>2.1145</td><td>High</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const colors = {
+            female: '#FFB7B2', male: '#A2D2FF', other: '#B2F2BB',
+            low: '#C1E1C1', medium: '#FDFD96', high: '#FFB347', extreme: '#FF6961'
+        };
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.getElementById('btn-' + tabId).classList.add('active');
+            window.dispatchEvent(new Event('resize'));
+        }
+
+        function renderTab1() {
+            Plotly.newPlot('tab1-gender', [{x:['Female','Male','Other'], y:[5200,4800,600], type:'bar', marker:{color:[colors.female, colors.male, colors.other]}}], {title:'<b>Gender Distribution</b>', font:{family:'Poppins'}});
+            const ageData = Array.from({length:1000}, () => Math.floor(Math.random()*13)+17);
+            Plotly.newPlot('tab1-age', [{x:ageData, type:'histogram', marker:{color:colors.male}}], {title:'<b>Age Distribution</b>', font:{family:'Poppins'}});
+            
+            const boxTraces = [];
+            [{n:'Low Performance',c:colors.low,b:58},{n:'Avg Performance',c:colors.male,b:70},{n:'High Performance',c:colors.high,b:82}].forEach(cat => {
+                [1,2,3,4].forEach(year => {
+                    boxTraces.push({
+                        y: Array.from({length: 20}, () => cat.b + (Math.random() * 6 - 3)),
+                        x: Array(20).fill('Year ' + year),
+                        name: cat.n, type: 'box', marker: { color: cat.c }, legendgroup: cat.n, showlegend: year === 1
+                    });
+                });
+            });
+            Plotly.newPlot('tab1-box', boxTraces, {boxmode: 'group', title: '<b>Performance by Academic Year</b>', font:{family:'Poppins'}});
+            
+            const scatterTraces = [{n:'Low',c:colors.low},{n:'Avg',c:colors.male},{n:'High',c:colors.high}].map(cat => {
+                let xArr=[], yArr=[], sizeArr=[];
+                for(let i=0; i<300; i++){
+                    let x = Math.random()*12;
+                    let y = (Math.random() > 0.85) ? x*7 : Math.pow(Math.random()*9, 2)*0.3;
+                    xArr.push(x); yArr.push(y); sizeArr.push(Math.random()*15+5);
+                }
+                return {x:xArr, y:yArr, mode:'markers', name:cat.n, marker:{size:sizeArr, color:cat.c, opacity:0.6, line:{color:'white', width:0.5}}};
+            });
+            Plotly.newPlot('tab1-scatter', scatterTraces, {title:'<b>Study Hours vs Stress Ratio</b>', font:{family:'Poppins'}, shapes:[{type:'line', x0:0, x1:12, y0:1, y1:1, line:{color:'#22c55e', width:2, dash:'dash'}}]});
+        }
+
+        function renderTab2() {
+            const filter = document.getElementById('sleepFilter').value;
+            const dataMap = {
+                "All":     { idx: "1.29", avg: "6.5 Jam", res: "37.0%", baseSleep: 6.5, lineY: [5.52, 5.5, 5.46, 5.54, 5.51, 7.15], color: colors.male, scatterRange: [3, 10] },
+                "Low":     { idx: "0.91", avg: "4.6 Jam", res: "0.0%",  baseSleep: 4.6, lineY: [4.59, 4.58, 4.62, 4.62, 4.56, 4.79], color: colors.low, scatterRange: [3, 5.5] },
+                "Medium":  { idx: "1.19", avg: "6.0 Jam", res: "0.0%",  baseSleep: 6.0, lineY: [6.02, 6.0, 5.99, 6.02, 5.99, 6.07, 5.97], color: colors.medium, scatterRange: [5.5, 6.5] },
+                "High":    { idx: "1.38", avg: "7.0 Jam", res: "48.2%", baseSleep: 7.0, lineY: [6.98, 6.98, 6.97, 6.98, 7.02, 6.96, 6.91], color: colors.high, scatterRange: [6.5, 7.5] },
+                "Extreme": { idx: "1.66", avg: "8.4 Jam", res: "100.0%",baseSleep: 8.4, lineY: [8.41, 8.44, 8.39, 8.36, 8.43, 8.4, 8.16], color: colors.extreme, scatterRange: [7.5, 10] }
+            };
+            const sel = dataMap[filter];
+            document.getElementById('kpi2-1').innerText = sel.idx;
+            document.getElementById('kpi2-2').innerText = sel.avg;
+            document.getElementById('kpi2-3').innerText = sel.res;
+
+            const barCount = filter === "All" ? [100,200,500,1200,1600,1700,1200,500,200,50] : [10,30,150,300,400,420,300,120,40,10];
+            Plotly.newPlot('t2-c1', [{x:[1,2,3,4,5,6,7,8,9,10], y:barCount, name:'Male', type:'bar', marker:{color:colors.male}}, {x:[1,2,3,4,5,6,7,8,9,10], y:barCount.map(v=>v+5), name:'Female', type:'bar', marker:{color:colors.female}}], {title:'<b>Exam Pressure (Gender)</b>', font:{family:'Poppins'}, barmode:'group'});
+
+            const sX = [], sY = []; for(let i=0; i<1000; i++){ sX.push(Math.random()*12); sY.push(sel.scatterRange[0] + Math.random()*(sel.scatterRange[1]-sel.scatterRange[0])); }
+            Plotly.newPlot('t2-c2', [{x:sX, y:sY, mode:'markers', marker:{color:sel.color, opacity:0.3, size:3}}], {title:'<b>Study vs Sleep</b>', font:{family:'Poppins'}});
+
+            const bVals = filter === "Medium" ? [5.6, 5.43, 5.52, 5.5] : [5.5, 5.47, 5.5, 5.5];
+            Plotly.newPlot('t2-c3', [{x:bVals, y:['Batch 1','Batch 2','Batch 3','Batch 4'], orientation:'h', type:'bar', marker:{color:colors.male}}], {title:'<b>Pressure by Batch</b>', font:{family:'Poppins'}});
+
+            let boxD = filter === "All" ? ['Low','Medium','High','Extreme'].map((n,i)=>({y:Array.from({length:20},()=>[4.6,6.0,7.0,8.4][i]+(Math.random()-0.5)), name:n, type:'box', marker:{color:[colors.low, colors.medium, colors.high, colors.extreme][i]}})) : [{y:Array.from({length:20},()=>sel.baseSleep+(Math.random()-0.5)), name:filter, type:'box', marker:{color:sel.color}}];
+            Plotly.newPlot('t2-c4', boxD, {title:'<b>Sleep Distribution</b>', font:{family:'Poppins'}});
+
+            const screenX = filter === "Medium" ? [2, 4, 6, 8, 9.5, 11, 12.5] : [1.5, 3.5, 4.8, 6.2, 7.5, 9, 10.5, 12];
+            Plotly.newPlot('t2-c5', [{x:screenX, y:sel.lineY, mode:'lines+markers', line:{color:'#3b82f6', width:3}}], {title:'<b>Screen vs Sleep</b>', font:{family:'Poppins'}});
+
+            Plotly.newPlot('t2-c6', ['Low','Med','High'].map(l=>({y:Array.from({length:20},()=>sel.baseSleep+(Math.random()-0.5)), name:l, type:'box', marker:{color:colors.high}})), {title:'<b>Pressure vs Sleep</b>', font:{family:'Poppins'}});
+        }
+
+        function renderTab3() {
+            Plotly.newPlot('t3-donut', [{values:[76, 22, 2], labels:['Low','Medium','High'], type:'pie', hole:0.5, marker:{colors:[colors.low, colors.medium, colors.extreme]}}], {title:'<b>Risk Map</b>', font:{family:'Poppins'}});
+            const genderGroups = [{ n: 'Male', c: colors.male, count: 700 }, { n: 'Female', c: '#A23B72', count: 700 }, { n: 'Other', c: colors.high, count: 200 }];
+            const scatterTraces = genderGroups.map(g => {
+                let xArr=[], yArr=[];
+                for(let i=0; i<g.count; i++){
+                    let x = Math.random()*10;
+                    let y = (Math.random() > 0.4) ? (x*(0.4+Math.random()*0.5))+(Math.random()*1.8-0.9) : 0;
+                    xArr.push(x); yArr.push(Math.max(0, y));
+                }
+                return {x:xArr, y:yArr, mode:'markers', name:g.n, marker:{size:4, color:g.c, opacity:0.5}};
+            });
+            Plotly.newPlot('t3-scatter-burnout', scatterTraces, {title:'<b>Stress vs Burnout Score</b>', font:{family:'Poppins'}, xaxis:{title:"Stress Level"}, yaxis:{title:"Burnout Score"}});
+            Plotly.newPlot('t3-box-social', ['Low','Medium','High'].map((c,i)=>({y:Array.from({length:20},()=>Math.random()*5), name:c, type:'box', marker:{color:[colors.low, colors.medium, colors.high][i]}})), {title:'<b>Social Support Impact</b>', font:{family:'Poppins'}});
+            Plotly.newPlot('t3-box-dropout', ['Low','Medium','High'].map((c,i)=>({y:Array.from({length:20},()=>Math.random()*10), name:c, type:'box', marker:{color:[colors.low, colors.medium, colors.high][i]}})), {title:'<b>Dropout Risk vs MH</b>', font:{family:'Poppins'}});
+        }
+
+        window.onload = () => { renderTab1(); renderTab2(); renderTab3(); };
+        window.onresize = () => { document.querySelectorAll('.js-plotly-plot').forEach(el => Plotly.Plots.resize(el)); };
+    </script>
+</body>
+</html>
